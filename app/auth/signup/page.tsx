@@ -23,9 +23,7 @@ const formSchema = z
   .object({
     name: z.string().min(2, { message: "Name must be at least 2 characters" }),
     email: z.string().email({ message: "Please enter a valid email address" }),
-    password: z.string().min(6, {
-      message: "Password must be at least 6 characters",
-    }),
+    password: z.string().min(6, { message: "Password must be at least 6 characters" }),
     confirmPassword: z.string(),
     phoneNumber: z.string().optional(),
     address: z.string().optional(),
@@ -56,9 +54,7 @@ export default function SignUp() {
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: values.name,
           email: values.email,
@@ -74,7 +70,7 @@ export default function SignUp() {
         throw new Error(data.message || "Something went wrong");
       }
 
-      toast.success("Account created successfully");
+      toast.success("Account created successfully. Check your email to verify.");
       router.push("/auth/signin");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Something went wrong");
@@ -119,11 +115,7 @@ export default function SignUp() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="you@example.com"
-                      {...field}
-                    />
+                    <Input type="email" placeholder="you@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -188,11 +180,7 @@ export default function SignUp() {
               )}
             />
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Creating account..." : "Sign Up"}
             </Button>
           </form>

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 import { dbConnect } from '@/lib/mongodb';
-import User from '@/models/User';
+import TemporaryUser from '@/models/TemporaryUser';
 import { sendVerificationEmail } from '@/lib/mailer';
 import { UserRole } from '@/lib/userRole';
 
@@ -13,25 +14,28 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
   }
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return NextResponse.json({ message: 'Email already in use' }, { status: 409 });
-  }
+  // Check if email already exists in either collection (Optional but recommended)
+  // You can check both TemporaryUser and User collection to prevent duplicates
 
   const verifyToken = crypto.randomBytes(32).toString('hex');
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await User.create({
+  // Save to TemporaryUser collection
+  const tempUser = await TemporaryUser.create({
     name,
-    email,
-    password,
+    email: email.toLowerCase(),
+    password: hashedPassword,
     phoneNumber,
     address,
     role: UserRole.SELLER,
-    isVerified: false,
-    verifyToken,
+    verificationToken: verifyToken,
   });
 
-  await sendVerificationEmail(email, verifyToken);
+  try {
+    await sendVerificationEmail(email, verifyToken);
+  } catch (error) {
+    return NextResponse.json({ message: 'Failed to send verification email' }, { status: 500 });
+  }
 
-  return NextResponse.json({ message: 'User registered. Check your email to verify.' }, { status: 201 });
+  return NextResponse.json({ message: 'Registration successful. Please verify your email.' }, { status: 201 });
 }
