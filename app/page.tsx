@@ -8,17 +8,21 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      
+
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative py-20 md:py-32 overflow-hidden bg-[url('https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg')] bg-cover bg-center">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/40 backdrop-blur-sm"></div>
+        <section
+          className="relative py-20 md:py-32 overflow-hidden bg-[url('https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg')] bg-cover bg-center"
+        >
+          {/* Darker overlay for better contrast */}
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
           <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 text-white">
+            <div className="max-w-3xl mx-auto text-center text-white">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
                 Turn Your Scrap Into Cash
               </h1>
-              <p className="text-xl md:text-2xl text-white/90 mb-8">
+              <p className="text-xl md:text-2xl mb-8">
                 The sustainable way to sell your scrap materials for the best price, collected right from your doorstep.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -29,15 +33,13 @@ export default function Home() {
                   </Button>
                 </Link>
                 <Link href="/how-it-works">
-                  <Button size="lg" variant="outline" className="px-8 border-white text-white hover:bg-white/10">
-                    Learn More
-                  </Button>
+                 
                 </Link>
               </div>
             </div>
           </div>
         </section>
-        
+
         {/* How It Works Section */}
         <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
@@ -47,9 +49,9 @@ export default function Home() {
                 Our easy and convenient process to turn your scrap materials into money
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              {/* Step cards with same structure but updated styling */}
+              {/* Step cards */}
               <div className="relative p-6 rounded-2xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/10">
                 <div className="bg-primary/10 rounded-full h-16 w-16 flex items-center justify-center mx-auto mb-6">
                   <span className="text-primary font-bold text-xl">1</span>
@@ -59,7 +61,7 @@ export default function Home() {
                   Create a scrap selling request with details about your materials, weight, and preferred pickup time.
                 </p>
               </div>
-              
+
               <div className="relative p-6 rounded-2xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/10">
                 <div className="bg-primary/10 rounded-full h-16 w-16 flex items-center justify-center mx-auto mb-6">
                   <span className="text-primary font-bold text-xl">2</span>
@@ -69,7 +71,7 @@ export default function Home() {
                   Our professional staff will come to your location to collect and weigh the scrap materials.
                 </p>
               </div>
-              
+
               <div className="relative p-6 rounded-2xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/10">
                 <div className="bg-primary/10 rounded-full h-16 w-16 flex items-center justify-center mx-auto mb-6">
                   <span className="text-primary font-bold text-xl">3</span>
@@ -82,9 +84,11 @@ export default function Home() {
             </div>
           </div>
         </section>
-        
+
         {/* Benefits Section */}
-        <section className="py-20 bg-[url('https://images.pexels.com/photos/159751/book-address-book-learning-learn-159751.jpeg')] bg-cover bg-center">
+        <section
+          className="py-20 bg-[url('https://images.pexels.com/photos/159751/book-address-book-learning-learn-159751.jpeg')] bg-cover bg-center relative"
+        >
           <div className="absolute inset-0 bg-background/95"></div>
           <div className="container mx-auto px-4 relative">
             <div className="text-center mb-16">
@@ -93,7 +97,7 @@ export default function Home() {
                 We make recycling profitable and easy for everyone
               </p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="bg-background/80 backdrop-blur-sm rounded-lg p-8 shadow-lg border border-primary/10">
                 <div className="bg-primary/10 rounded-full h-12 w-12 flex items-center justify-center mb-6">
@@ -104,7 +108,7 @@ export default function Home() {
                   We offer competitive prices for all types of scrap materials, ensuring you get the best value.
                 </p>
               </div>
-              
+
               <div className="bg-background/80 backdrop-blur-sm rounded-lg p-8 shadow-lg border border-primary/10">
                 <div className="bg-primary/10 rounded-full h-12 w-12 flex items-center justify-center mb-6">
                   <Truck className="h-6 w-6 text-primary" />
@@ -114,7 +118,7 @@ export default function Home() {
                   Our team comes to your location, saving you time and the hassle of transporting materials.
                 </p>
               </div>
-              
+
               <div className="bg-background/80 backdrop-blur-sm rounded-lg p-8 shadow-lg border border-primary/10">
                 <div className="bg-primary/10 rounded-full h-12 w-12 flex items-center justify-center mb-6">
                   <Leaf className="h-6 w-6 text-primary" />
@@ -127,7 +131,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        
+
         {/* CTA Section */}
         <section className="py-20 bg-primary">
           <div className="container mx-auto px-4">
@@ -148,7 +152,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      
+
       <Footer />
     </div>
   );
