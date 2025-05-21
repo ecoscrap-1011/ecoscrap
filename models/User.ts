@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { UserRole } from '@/lib/userRole';  // if moved
 
 export interface IUser extends Document {
+  _id: any;
   name: string;
   email: string;
   password: string;
