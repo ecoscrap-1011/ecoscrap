@@ -1,57 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {dbConnect } from '@/lib/mongodb';
+import crypto from 'crypto';
+import { dbConnect } from '@/lib/mongodb';
 import User from '@/models/User';
-import { UserRole } from '@/lib/userRole'; 
+import { sendVerificationEmail } from '@/lib/mailer';
+import { UserRole } from '@/lib/userRole';
+
 export async function POST(req: NextRequest) {
-  try {
-    await dbConnect();
-    
-    const { name, email, password, phoneNumber, address } = await req.json();
-    
-    // Validate input
-    if (!name || !email || !password) {
-      return NextResponse.json(
-        { message: 'Name, email, and password are required' },
-        { status: 400 }
-      );
-    }
-    
-    // Check if user already exists
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
-    if (existingUser) {
-      return NextResponse.json(
-        { message: 'User with this email already exists' },
-        { status: 409 }
-      );
-    }
-    
-    // Create new user
-    const user = await User.create({
-      name,
-      email: email.toLowerCase(),
-      password,
-      role: UserRole.SELLER, // Default role is SELLER
-      phoneNumber,
-      address,
-    });
-    
-    // Do not return the password
-    const sanitizedUser = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    };
-    
-    return NextResponse.json(
-      { message: 'User registered successfully', user: sanitizedUser },
-      { status: 201 }
-    );
-  } catch (error) {
-    console.error('Registration error:', error);
-    return NextResponse.json(
-      { message: 'Something went wrong', error: (error as Error).message },
-      { status: 500 }
-    );
+  await dbConnect();
+  const { name, email, password, phoneNumber, address } = await req.json();
+
+  if (!name || !email || !password) {
+    return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
   }
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return NextResponse.json({ message: 'Email already in use' }, { status: 409 });
+  }
+
+  const verifyToken = crypto.randomBytes(32).toString('hex');
+
+  const user = await User.create({
+    name,
+    email,
+    password,
+    phoneNumber,
+    address,
+    role: UserRole.SELLER,
+    isVerified: false,
+    verifyToken,
+  });
+
+  await sendVerificationEmail(email, verifyToken);
+
+  return NextResponse.json({ message: 'User registered. Check your email to verify.' }, { status: 201 });
 }

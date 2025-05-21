@@ -1,6 +1,6 @@
 import mongoose, { Schema, model, models, Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { UserRole } from '@/lib/userRole';  // if moved
+import { UserRole } from '@/lib/userRole';
 
 export interface IUser extends Document {
   _id: any;
@@ -10,6 +10,8 @@ export interface IUser extends Document {
   role: UserRole;
   phoneNumber?: string;
   address?: string;
+  isVerified: boolean;
+  verificationToken?: string;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -30,9 +32,15 @@ const UserSchema = new Schema<IUser>(
       ],
     },
     password: { type: String, required: true, minlength: 6 },
-    role: { type: String, enum: Object.values(UserRole), default: UserRole.SELLER },
+    role: {
+      type: String,
+      enum: Object.values(UserRole),
+      default: UserRole.SELLER,
+    },
     phoneNumber: { type: String, trim: true },
     address: { type: String, trim: true },
+    isVerified: { type: Boolean, default: false },
+    verificationToken: { type: String },
   },
   { timestamps: true }
 );

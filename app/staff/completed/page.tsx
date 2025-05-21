@@ -77,7 +77,7 @@ export default async function CompletedPickupsPage() {
                     Time Slot: {pickup.timeSlot}
                   </div>
                   <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    <MapPin className="h-4 w-4 tex t-muted-foreground" />
                     Address: {pickup.address}
                   </div>
                   <div className="flex items-center gap-2">
