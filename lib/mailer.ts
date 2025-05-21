@@ -7,7 +7,7 @@ const transporter = nodemailer.createTransport({
     secure: false, // TLS
     auth: {
         user: "ecoscrap.1011@gmail.com",  // your Gmail email
-        pass: "snxs fqvi isko jdzc",
+        pass: "snxs drvi isko uiyt",
 
     },
 
