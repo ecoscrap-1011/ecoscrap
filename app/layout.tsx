@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: 'EcoScrap - Scrap Material Selling Platform',
   description: 'Buy and sell scrap materials with ease.',
   icons: {
-    icon: '/favicon.ico',
+    icon: 'favicon.ico',
   },
 };
 
