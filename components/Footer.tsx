@@ -69,7 +69,7 @@ export default function Footer() {
             <h3 className="font-semibold text-lg mb-4">Contact Us</h3>
             <ul className="space-y-2 text-sm">
               <li className="text-muted-foreground">Email: ecoscrap.1011@gmail.com</li>
-              <li className="text-muted-foreground">Phone: (123) 456-7890</li>
+              <li className="text-muted-foreground">Phone: (+91) 9876543210</li>
               <li className="text-muted-foreground">
                 Address: ecoscrap bangloree , karnadaka
               </li>
