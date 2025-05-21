@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
 import DashboardShell from "@/components/DashboardShell";
-import { UserRole } from "@/models/User";
+import { UserRole } from '@/lib/userRole'; 
 import {
   Card,
   CardContent,

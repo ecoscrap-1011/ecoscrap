@@ -1,11 +1,6 @@
 import mongoose, { Schema, model, models, Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
-
-export enum UserRole {
-  SELLER = 'SELLER',
-  ADMIN = 'ADMIN',
-  STAFF = 'STAFF',
-}
+import { UserRole } from '@/lib/userRole';  // if moved
 
 export interface IUser extends Document {
   name: string;
@@ -57,7 +52,6 @@ UserSchema.methods.comparePassword = async function (candidatePassword: string) 
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Use optional chaining to safely access models.User
 const User = models?.User || model<IUser>('User', UserSchema);
 
 export default User;

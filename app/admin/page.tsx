@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
 import DashboardShell from "@/components/DashboardShell";
-import { UserRole } from "@/models/User";
+import { UserRole } from '@/lib/userRole'; 
 import {
   Card,
   CardContent,
@@ -23,37 +23,29 @@ import {
   Check,
   X,
 } from "lucide-react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import RequestOverviewChart from "@/components/RequestOverviewChart";
 
 async function getStats() {
   await dbConnect();
-  
+
   const totalUsers = await User.countDocuments({ role: UserRole.SELLER });
   const totalStaff = await User.countDocuments({ role: UserRole.STAFF });
   const totalMaterials = await ScrapType.countDocuments();
-  
-  const pendingRequests = await ScrapRequest.countDocuments({ 
-    status: RequestStatus.PENDING 
+
+  const pendingRequests = await ScrapRequest.countDocuments({
+    status: RequestStatus.PENDING,
   });
-  const assignedRequests = await ScrapRequest.countDocuments({ 
-    status: { $in: [RequestStatus.ASSIGNED, RequestStatus.EN_ROUTE] } 
+  const assignedRequests = await ScrapRequest.countDocuments({
+    status: { $in: [RequestStatus.ASSIGNED, RequestStatus.EN_ROUTE] },
   });
-  const completedRequests = await ScrapRequest.countDocuments({ 
-    status: RequestStatus.COMPLETED 
+  const completedRequests = await ScrapRequest.countDocuments({
+    status: RequestStatus.COMPLETED,
   });
-  const cancelledRequests = await ScrapRequest.countDocuments({ 
-    status: { $in: [RequestStatus.CANCELLED, RequestStatus.REJECTED] } 
+  const cancelledRequests = await ScrapRequest.countDocuments({
+    status: { $in: [RequestStatus.CANCELLED, RequestStatus.REJECTED] },
   });
-  
-  // Mock chart data - in real app this would calculate from actual data
+
+  // Mock chart data - replace with real calculation if needed
   const chartData = [
     { name: "Jan", requests: 65, value: 2400 },
     { name: "Feb", requests: 59, value: 2210 },
@@ -63,37 +55,40 @@ async function getStats() {
     { name: "Jun", requests: 55, value: 2390 },
     { name: "Jul", requests: 40, value: 3490 },
   ];
-  
-  return { 
-    totalUsers, 
-    totalStaff, 
-    totalMaterials, 
-    pendingRequests, 
-    assignedRequests, 
-    completedRequests, 
+
+  return {
+    totalUsers,
+    totalStaff,
+    totalMaterials,
+    pendingRequests,
+    assignedRequests,
+    completedRequests,
     cancelledRequests,
-    chartData
+    chartData,
   };
 }
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
-  
+
   if (!session) {
     redirect("/auth/signin");
   }
-  
+
   if (session.user.role !== UserRole.ADMIN) {
     redirect("/");
   }
-  
+
   const stats = await getStats();
-  
+
   return (
-    <DashboardShell role={UserRole.ADMIN} userName={session.user.name || 'Admin'}>
+    <DashboardShell
+      role={UserRole.ADMIN}
+      userName={session.user.name || "Admin"}
+    >
       <div className="space-y-6">
         <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-        
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -109,114 +104,58 @@ export default async function AdminDashboard() {
               </p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Staff Members
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Staff Members</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalStaff}</div>
-              <p className="text-xs text-muted-foreground">
-                Active collection staff
-              </p>
+              <p className="text-xs text-muted-foreground">Active collection staff</p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Material Types
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Material Types</CardTitle>
               <PackageCheck className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalMaterials}</div>
-              <p className="text-xs text-muted-foreground">
-                Active scrap materials
-              </p>
+              <p className="text-xs text-muted-foreground">Active scrap materials</p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Pending Requests
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Pending Requests</CardTitle>
               <ClipboardList className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.pendingRequests}</div>
-              <p className="text-xs text-muted-foreground">
-                Awaiting review
-              </p>
+              <p className="text-xs text-muted-foreground">Awaiting review</p>
             </CardContent>
           </Card>
         </div>
-        
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
           <Card className="md:col-span-2 lg:col-span-4">
             <CardHeader>
               <CardTitle>Requests Overview</CardTitle>
-              <CardDescription>
-                Monthly request trends and value
-              </CardDescription>
+              <CardDescription>Monthly request trends and value</CardDescription>
             </CardHeader>
             <CardContent className="px-2">
               <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={stats.chartData}
-                    margin={{
-                      top: 5,
-                      right: 10,
-                      left: 10,
-                      bottom: 0,
-                    }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis 
-                      dataKey="name" 
-                      fontSize={12} 
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <YAxis
-                      fontSize={12}
-                      tickLine={false}
-                      axisLine={false}
-                      tickFormatter={(value) => `$${value}`}
-                    />
-                    <Tooltip />
-                    <Line
-                      type="monotone"
-                      dataKey="value"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth={2}
-                      dot={{ r: 4 }}
-                      activeDot={{ r: 6 }}
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="requests"
-                      stroke="hsl(var(--chart-2))"
-                      strokeWidth={2}
-                      dot={{ r: 4 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+                <RequestOverviewChart data={stats.chartData} />
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="md:col-span-2 lg:col-span-3">
             <CardHeader>
               <CardTitle>Request Status</CardTitle>
-              <CardDescription>
-                Current status of all scrap requests
-              </CardDescription>
+              <CardDescription>Current status of all scrap requests</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

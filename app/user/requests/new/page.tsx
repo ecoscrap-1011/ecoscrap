@@ -3,7 +3,7 @@ import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
 import ScrapRequestForm from "@/components/ScrapRequestForm";
 import DashboardShell from "@/components/DashboardShell";
-import { UserRole } from "@/models/User";
+import { UserRole } from '@/lib/userRole'; 
 import ScrapType from "@/models/ScrapType";
 import { dbConnect } from "@/lib/mongodb";
 

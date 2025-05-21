@@ -2,7 +2,7 @@ import DashboardShell from "@/components/DashboardShell";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
-import { UserRole } from "@/models/User";
+import { UserRole } from '@/lib/userRole'; 
 import dynamic from "next/dynamic";
 
 // Dynamically import the client component

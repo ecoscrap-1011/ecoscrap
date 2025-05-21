@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import DashboardSidebar from './DashboardSidebar';
-import { UserRole } from '@/models/User';
+import { UserRole } from '@/lib/userRole';
 
 interface DashboardShellProps {
   children: ReactNode;

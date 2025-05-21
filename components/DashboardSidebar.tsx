@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import NavbarLogo from './NavbarLogo';
-import { UserRole } from '@/models/User';
+import { UserRole } from '@/lib/userRole'; // updated import here
 import { 
   LayoutDashboard, 
   ClipboardList, 
@@ -13,7 +13,6 @@ import {
   Users, 
   Package, 
   FileText, 
-  TrendingUp, 
   LifeBuoy,
   LogOut, 
   Menu, 
@@ -31,9 +30,8 @@ export default function DashboardSidebar({ role, userName }: DashboardSidebarPro
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-const basePath = role === UserRole.SELLER ? "/user" : `/${role.toLowerCase()}`;
+  const basePath = role === UserRole.SELLER ? "/user" : `/${role.toLowerCase()}`;
 
-  
   const getNavItems = () => {
     const commonItems = [
       {
@@ -110,7 +108,6 @@ const basePath = role === UserRole.SELLER ? "/user" : `/${role.toLowerCase()}`;
             href: '/user/requests',
             icon: <ClipboardList className="h-5 w-5" />,
           },
-         
           ...commonItems,
         ];
     }

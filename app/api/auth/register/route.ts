@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {dbConnect } from '@/lib/mongodb';
-import User, { UserRole } from '@/models/User';
-
+import User from '@/models/User';
+import { UserRole } from '@/lib/userRole'; 
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
