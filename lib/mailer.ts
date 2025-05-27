@@ -28,7 +28,6 @@ export async function sendVerificationEmail(receiver: string, token: string) {
         const info = await transporter.sendMail({
             from: `"EcoScrap Support" <ecoscrap.1011@gmail.com>`,
             to: receiver,
-            console.log(receiver)
             subject: 'Verify your EcoScrap account',
             text: `Please verify your email by clicking the link: ${verificationUrl}`,
             html: `
